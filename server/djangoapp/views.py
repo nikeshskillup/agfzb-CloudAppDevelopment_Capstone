@@ -15,7 +15,6 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
-#test update
 def about(request):
     context = {}
     return render(request, 'djangoapp/about.html', context)
