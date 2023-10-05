@@ -31,18 +31,21 @@ def get_dealerships(request):
         context = {}
         url = "https://nikeshkr-3000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
         dealerships = get_dealers_from_cf(url)
-        context["dealership_list"] = dealerships
-        return render(request, 'djangoapp/index.html', context)
+         # Concat all dealer's short name
+        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+        # Return a list of dealer short name
+        return HttpResponse(dealer_names)
+
 
 
 def get_dealer_details(request, id):
     if request.method == "GET":
         context = {}
-        dealer_url = "https://a3795162.eu-gb.apigw.appdomain.cloud/api2/getdealerships"
+        dealer_url = "https://nikeshkr-3000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api2/getdealerships"
         dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
         context["dealer"] = dealer
     
-        review_url = "https://a3795162.eu-gb.apigw.appdomain.cloud/api2/getreviews"
+        review_url = "https://nikeshkr-3000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api2/getreviews"
         reviews = get_dealer_reviews_from_cf(review_url, id=id)
         print(reviews)
         context["reviews"] = reviews
@@ -52,7 +55,7 @@ def get_dealer_details(request, id):
 
 def add_review(request, id):
     context = {}
-    dealer_url = "https://a3795162.eu-gb.apigw.appdomain.cloud/api2/getdealerships"
+    dealer_url = "https://nikeshkr-3000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api2/getdealerships"
     dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
     context["dealer"] = dealer
     if request.method == 'GET':
@@ -85,7 +88,7 @@ def add_review(request, id):
 
             new_payload = {}
             new_payload["review"] = payload
-            review_post_url = "https://a3795162.eu-gb.apigw.appdomain.cloud/api2/postreviews"
+            review_post_url = "https://nikeshkr-3000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api2/postreviews"
             post_request(review_post_url, new_payload, id=id)
         return redirect("djangoapp:dealer_details", id=id)
 

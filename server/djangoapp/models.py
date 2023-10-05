@@ -42,31 +42,60 @@ class CarModel(models.Model):
     def __str__(self):
         return "Name: " + self.name
 
-class CarDealer(models.Model):
+# class CarDealer(models.Model):
 
-    address = models.CharField(max_length=200)
-    city = models.CharField(max_length=100)
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    lat = models.DecimalField(max_digits=9, decimal_places=6)
-    long = models.DecimalField(max_digits=9, decimal_places=6)
-    st = models.CharField(max_length=2)
-    zip = models.CharField(max_length=10)
-    full_name = models.CharField(max_length=200)
+#     address = models.CharField(max_length=200)
+#     city = models.CharField(max_length=100)
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     lat = models.DecimalField(max_digits=9, decimal_places=6)
+#     long = models.DecimalField(max_digits=9, decimal_places=6)
+#     st = models.CharField(max_length=2)
+#     zip = models.CharField(max_length=10)
+#     full_name = models.CharField(max_length=200)
+
+#     def __str__(self):
+#         return "Dealer name: " + self.full_name
+
+class CarDealer:
+
+    def __init__(self, address, city, full_name, id, lat, long, short_name, st, zip):
+    # Constructor code here
+
+        # Dealer address
+        self.address = address
+        # Dealer city
+        self.city = city
+        # Dealer Full Name
+        self.full_name = full_name
+        # Dealer id
+        self.id = id
+        # Location lat
+        self.lat = lat
+        # Location long
+        self.long = long
+        # Dealer short name
+        self.short_name = short_name
+        # Dealer state
+        self.st = st
+        # Dealer zip
+        self.zip = zip
 
     def __str__(self):
         return "Dealer name: " + self.full_name
 
-# class DealerReview(models.Model):
 
-#     dealership = models.ForeignKey(CarDealer, on_delete=models.CASCADE)
-#     name = models.CharField(max_length=100)
-#     purchase = models.BooleanField()
-#     review = models.TextField()
-#     purchase_date = models.DateField(null=True)
-#     car_make = models.CharField(max_length=100, null=True)
-#     car_model = models.CharField(max_length=100, null=True)
-#     car_year = models.CharField(max_length=4, null=True)
-#     sentiment = models.CharField(max_length=10, null=True)
+class DealerReview(models.Model):
 
-#     def __str__(self):
-#         return "Review: " + self.review
+    dealership = models.ForeignKey(CarDealer, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    purchase = models.BooleanField()
+    review = models.TextField()
+    purchase_date = models.DateField(null=True)
+    car_make = models.CharField(max_length=100, null=True)
+    car_model = models.CharField(max_length=100, null=True)
+    car_year = models.CharField(max_length=4, null=True)
+    sentiment = models.CharField(max_length=10, null=True)
+
+    def __str__(self):
+        return "Review: " + self.review
+
