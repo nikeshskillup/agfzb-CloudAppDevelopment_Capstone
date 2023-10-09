@@ -1,12 +1,18 @@
 from django.db import models
+from django.core import serializers
 from django.utils.timezone import now
-import json
 import uuid
-
+import json
 
 # Create your models here.
 
-# Create a Car Make model
+# <HINT> Create a Car Make model `class CarMake(models.Model)`:
+# - Name
+# - Description
+# - Any othere fields you would like to include in car make model
+# - __str__ method to print a car make object
+
+
 class CarMake(models.Model):
     name = models.CharField(null=False, max_length=100, default='Make')
     description = models.CharField(max_length=500)
@@ -14,15 +20,23 @@ class CarMake(models.Model):
     def __str__(self):
         return "Name: " + self.name
 
-# Create a Car Model model
-class CarModel(models.Model):
-    name = models.CharField(null=False, max_length=100, default='Car')
+# <HINT> Create a Car Model model `class CarModel(models.Model):`:
+# - Many-To-One relationship to Car Make model (One Car Make has many Car Models, using ForeignKey field)
+# - Name
+# - Type (CharField with a choices argument to provide limited choices such as Sedan, SUV, WAGON, etc.)
+# - Year (DateField)
+# - Any other fields you would like to include in car make model
+# - __str__ method to print a car make object
 
+
+class CarModel(models.Model):
+    id = models.IntegerField(default=1,primary_key=True)
+    name = models.CharField(null=False, max_length=100, default='Car')
+   
     SEDAN = 'Sedan'
     SUV = 'SUV'
     WAGON = 'Wagon'
     MINIVAN = 'Minivan'
-    
     CAR_TYPES = [
         (SEDAN, 'Sedan'),
         (SUV, 'SUV'),
@@ -42,60 +56,70 @@ class CarModel(models.Model):
     def __str__(self):
         return "Name: " + self.name
 
-# class CarDealer(models.Model):
-
-#     address = models.CharField(max_length=200)
-#     city = models.CharField(max_length=100)
-#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-#     lat = models.DecimalField(max_digits=9, decimal_places=6)
-#     long = models.DecimalField(max_digits=9, decimal_places=6)
-#     st = models.CharField(max_length=2)
-#     zip = models.CharField(max_length=10)
-#     full_name = models.CharField(max_length=200)
-
-#     def __str__(self):
-#         return "Dealer name: " + self.full_name
 
 class CarDealer:
 
-    def __init__(self, address, city, full_name, id, lat, long, short_name, st, zip):
-    # Constructor code here
-
+    def __init__(self, address, city, id, lat, long, st, zip, full_name):
         # Dealer address
         self.address = address
         # Dealer city
         self.city = city
-        # Dealer Full Name
-        self.full_name = full_name
+       
         # Dealer id
         self.id = id
         # Location lat
         self.lat = lat
         # Location long
         self.long = long
-        # Dealer short name
-        self.short_name = short_name
+
         # Dealer state
         self.st = st
         # Dealer zip
         self.zip = zip
 
+        # Full name
+        self.full_name = full_name
+
     def __str__(self):
         return "Dealer name: " + self.full_name
 
 
-class DealerReview(models.Model):
+class DealerReview:
 
-    dealership = models.ForeignKey(CarDealer, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    purchase = models.BooleanField()
-    review = models.TextField()
-    purchase_date = models.DateField(null=True)
-    car_make = models.CharField(max_length=100, null=True)
-    car_model = models.CharField(max_length=100, null=True)
-    car_year = models.CharField(max_length=4, null=True)
-    sentiment = models.CharField(max_length=10, null=True)
+    def __init__(self, dealership, name, purchase, review):
+        # Required attributes
+        self.dealership = dealership
+        self.name = name
+        self.purchase = purchase
+        self.review = review
+        # Optional attributes
+        self.purchase_date = ""
+        self.purchase_make = ""
+        self.purchase_model = ""
+        self.purchase_year = ""
+        self.sentiment = ""
+        self.id = ""
 
     def __str__(self):
         return "Review: " + self.review
 
+    def to_json(self):
+        return json.dumps(self, default=lambda o: o.__dict__,
+                            sort_keys=True, indent=4)
+
+
+class ReviewPost:
+
+    def __init__(self, dealership, name, purchase, review):
+        self.dealership = dealership
+        self.name = name
+        self.purchase = purchase
+        self.review = review
+        self.purchase_date = ""
+        self.car_make = ""
+        self.car_model = ""
+        self.car_year = ""
+
+    def to_json(self):
+        return json.dumps(self, default=lambda o: o.__dict__,
+                            sort_keys=True, indent=4)
