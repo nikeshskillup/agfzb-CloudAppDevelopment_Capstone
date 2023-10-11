@@ -34,17 +34,15 @@ def get_dealers_from_cf(url, **kwargs):
 
     if json_result:
         # Get the row list in JSON as dealers
-        dealers = json_result["body"]
+        dealers = json_result
         # For each dealer object
         for dealer in dealers:
             # Get its content in `doc` object
-            dealer_doc = dealer["doc"]
-            # print(dealer_doc)
+            dealer_doc = dealer
             # Create a CarDealer object with values in `doc` object
             dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"],
                                    id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"], full_name=dealer_doc["full_name"],
-                                
-                                   st=dealer_doc["st"], zip=dealer_doc["zip"])
+                                   st=dealer_doc["st"], zip=dealer_doc["zip"], short_name=dealer_doc["short_name"])
             results.append(dealer_obj)
 
     return results
@@ -52,18 +50,20 @@ def get_dealers_from_cf(url, **kwargs):
 
 def get_dealer_by_id_from_cf(url, id):
     json_result = get_request(url, id=id)
-    print('json_result from line 54',json_result)
+    print('json_result from line 54', json_result)
 
     if json_result:
         dealers = json_result["body"]
-        
-    
+
         dealer_doc = dealers[0]
         dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"],
-                                id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"], full_name=dealer_doc["full_name"],
-                                
-                                st=dealer_doc["st"], zip=dealer_doc["zip"])
-    return dealer_obj
+                               id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"],
+                               full_name=dealer_doc["full_name"], st=dealer_doc["st"], zip=dealer_doc["zip"])
+        return dealer_obj
+
+    # If json_result is not truthy, return something (maybe None or raise an exception, depending on your needs)
+    return None  # You can customize this based on your requirements
+
 
 
 def get_dealer_reviews_from_cf(url, **kwargs):
@@ -73,9 +73,9 @@ def get_dealer_reviews_from_cf(url, **kwargs):
         json_result = get_request(url, id=id)
     else:
         json_result = get_request(url)
-    # print(json_result)
+    print("LINE 75 RESTAPRI  +++ " , json_result)
     if json_result:
-        reviews = json_result["body"]["data"]["docs"]
+        reviews = json_result
         for dealer_review in reviews:
             review_obj = DealerReview(dealership=dealer_review["dealership"],
                                    name=dealer_review["name"],
@@ -102,9 +102,13 @@ def get_dealer_reviews_from_cf(url, **kwargs):
 
 def get_request(url, **kwargs):
     
-    # If argument contain API KEY
-    api_key = kwargs.get("api_key")
+    # If argument contains API KEY
+    api_key = kwargs.get('api_key')
     print("GET from {} ".format(url))
+    print("API KEY ****", api_key)
+    
+    response = None  # Define response and set it to None
+    
     try:
         if api_key:
             params = dict()
@@ -115,17 +119,23 @@ def get_request(url, **kwargs):
             response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
                                     auth=HTTPBasicAuth('apikey', api_key))
         else:
-            # Call get method of requests library with URL and parameters
+            # Call get method of the requests library with URL and parameters
             response = requests.get(url, headers={'Content-Type': 'application/json'},
                                     params=kwargs)
     except:
         # If any error occurs
         print("Network exception occurred")
 
-    status_code = response.status_code
-    print("With status {} ".format(status_code))
-    json_data = json.loads(response.text)
-    return json_data
+    if response is not None:
+        status_code = response.status_code
+        print("With status {} ".format(status_code))
+        json_data = json.loads(response.text)
+        return json_data
+    else:
+        # Handle the case where an exception occurred and response is None
+        return None
+
+
 
 
 def post_request(url, payload, **kwargs):

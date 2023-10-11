@@ -7,8 +7,8 @@ const Cloudant = require('@cloudant/cloudant');
 async function dbCloudantConnect() {
     try {
         const cloudant = Cloudant({
-            plugins: { iamauth: { iamApiKey: 'Aa3R-OE-mcrQpRM8LA6DQEzUMg17TPFH8aC-yMKKITOy' } }, // Replace with your IAM API key
-            url: 'https://9b467128-209e-4738-817a-9dd135dfecf2-bluemix.cloudantnosqldb.appdomain.cloud', // Replace with your Cloudant URL
+            plugins: { iamauth: { iamApiKey: "Aa3R-OE-mcrQpRM8LA6DQEzUMg17TPFH8aC-yMKKITOy" } }, // Replace with your IAM API key
+            url: "https://9b467128-209e-4738-817a-9dd135dfecf2-bluemix.cloudantnosqldb.appdomain.cloud", // Replace with your Cloudant URL
         });
 
         const db = cloudant.use('dealerships');
