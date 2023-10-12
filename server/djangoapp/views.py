@@ -41,11 +41,11 @@ def get_dealer_details(request, id):
         dealer_url = "https://nikeshkr-3000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
         dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
         context["dealer"] = dealer
-        print(dealer)
+        # print(dealer)
     
         review_url = "https://nikeshkr-5000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/get_reviews"
         reviews = get_dealer_reviews_from_cf(review_url, id=id)
-        print(reviews)
+        # print(reviews)
         context["reviews"] = reviews
         
         return render(request, 'djangoapp/dealer_details.html', context)
@@ -59,14 +59,14 @@ def add_review(request, id):
     if request.method == 'GET':
         # Get cars for the dealer
         cars = CarModel.objects.all()
-        print(cars)
+        # print(cars)
         context["cars"] = cars
         
         return render(request, 'djangoapp/add_review.html', context)
     elif request.method == 'POST':
         if request.user.is_authenticated:
             username = request.user.username
-            print(request.POST)
+            print("request.POST is here ------", request.POST)
             payload = dict()
             car_id = request.POST["car"]
             car = CarModel.objects.get(pk=car_id)
@@ -86,7 +86,7 @@ def add_review(request, id):
 
             new_payload = {}
             new_payload["review"] = payload
-            review_post_url = "https://nikeshkr-5000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/post_reviews"
+            review_post_url = "https://nikeshkr-5000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/post_review"
             post_request(review_post_url, new_payload, id=id)
         return redirect("djangoapp:dealer_details", id=id)
 
