@@ -9,16 +9,14 @@ import time
  
 
 def analyze_review_sentiments(text):
-    url = "https://api.eu-gb.natural-language-understanding.watson.cloud.ibm.com/instances/a7d55b2b-30e4-4d58-91a1-bd84cb7b5c14"
-    api_key = "S8Ncd3903aq7KoTo6MJPqi3nrpIvivQuWJdwqmMQifFK"
+    url = "https://api.au-syd.natural-language-understanding.watson.cloud.ibm.com/instances/84fa55a8-9345-4506-93e5-08cf32b2b02f"
+    api_key = "Uor15izqvTNG6I8Zx5Y8kzWFjf6twBh7VAKVFKP7xSjZ"
     authenticator = IAMAuthenticator(api_key)
     natural_language_understanding = NaturalLanguageUnderstandingV1(version='2021-08-01',authenticator=authenticator)
     natural_language_understanding.set_service_url(url)
     response = natural_language_understanding.analyze( text=text+"hello hello hello",features=Features(sentiment=SentimentOptions(targets=[text+"hello hello hello"]))).get_result()
     label=json.dumps(response, indent=2)
     label = response['sentiment']['document']['label']
-    
-    
     return(label)
 
 
@@ -71,23 +69,24 @@ def get_dealer_reviews_from_cf(url, **kwargs):
     else:
         json_result = get_request(url)
     # print(json_result)
+    
     if json_result:
-        reviews = json_result["body"]["data"]["docs"]
-        for dealer_review in reviews:
-            review_obj = DealerReview(dealership=dealer_review["dealership"],
-                                   name=dealer_review["name"],
-                                   purchase=dealer_review["purchase"],
-                                   review=dealer_review["review"])
-            if "id" in dealer_review:
-                review_obj.id = dealer_review["id"]
-            if "purchase_date" in dealer_review:
-                review_obj.purchase_date = dealer_review["purchase_date"]
-            if "car_make" in dealer_review:
-                review_obj.car_make = dealer_review["car_make"]
-            if "car_model" in dealer_review:
-                review_obj.car_model = dealer_review["car_model"]
-            if "car_year" in dealer_review:
-                review_obj.car_year = dealer_review["car_year"]
+        # The structure of json_result should be a list, not a dictionary
+        # So, loop through the list to process each dealer review
+        for dealer_review in json_result:
+            review_obj = DealerReview(
+                dealership=dealer_review.get("dealership"),
+                name=dealer_review.get("name"),
+                purchase=dealer_review.get("purchase"),
+                review=dealer_review.get("review")
+            )
+            
+            # Use .get() to safely access optional fields
+            review_obj.id = dealer_review.get("id")
+            review_obj.purchase_date = dealer_review.get("purchase_date")
+            review_obj.car_make = dealer_review.get("car_make")
+            review_obj.car_model = dealer_review.get("car_model")
+            review_obj.car_year = dealer_review.get("car_year")
             
             sentiment = analyze_review_sentiments(review_obj.review)
             print(sentiment)
