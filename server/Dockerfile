@@ -1,10 +1,7 @@
-FROM python:3.8.2
+FROM python:3.12.0-slim-bookworm
 
 ENV PYTHONBUFFERED 1
 ENV PYTHONWRITEBYTECODE 1
-
-RUN apt-get update \
-    && apt-get install -y netcat
 
 ENV APP=/app
 

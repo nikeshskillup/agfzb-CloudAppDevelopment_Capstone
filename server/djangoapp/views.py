@@ -6,6 +6,7 @@ from .models import CarMake, CarModel
 from .restapis import get_request, get_dealer_by_id_from_cf, post_request, get_dealers_from_cf, get_dealer_reviews_from_cf
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 import logging
 import json
@@ -50,7 +51,7 @@ def get_dealer_details(request, id):
         
         return render(request, 'djangoapp/dealer_details.html', context)
 
-
+@csrf_exempt
 def add_review(request, id):
     context = {}
     dealer_url = "https://nikeshkr-3000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
@@ -91,7 +92,7 @@ def add_review(request, id):
         return redirect("djangoapp:dealer_details", id=id)
 
 #new url and api updated
-
+@csrf_exempt
 def registration_request(request):
     context = {}
     if request.method == 'GET':
@@ -120,7 +121,7 @@ def registration_request(request):
             messages.warning(request, "The user already exists.")
             return redirect("djangoapp:registration")
 
-
+@csrf_exempt
 def login_request(request):
     if request.method == "POST":
         username = request.POST['username']
