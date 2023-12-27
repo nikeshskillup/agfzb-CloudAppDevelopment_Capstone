@@ -27,10 +27,9 @@ DEBUG = True
 
 APPEND_SLASH = True
 
-ALLOWED_HOSTS = ['localhost', 'localhost:8000', 'cardealers210922.eu-gb.mybluemix.net', 'https://ksundararaja-8000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai']
+ALLOWED_HOSTS = ['localhost', 'localhost:8000', 'cardealers210922.eu-gb.mybluemix.net', 'https://nikeshkr-8000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai']
 
-
-CSRF_TRUSTED_ORIGINS = ['https://ksundararaja-8000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai']
+CSRF_TRUSTED_ORIGINS = ['https://nikeshkr-8000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai']
 
 # Application definition
 
